@@ -9,17 +9,17 @@ type HeaderProps = {};
 
 const Header: React.FC<HeaderProps> = () => {
     return (
-        <header className="header bg-black text-white z-10 m-auto h-[84px] flex justify-center items-center text-[14px]">
+        <header className="header w-full bg-primary text-white z-10 h-[84px] flex justify-center items-center text-[14px]">
             <div className="hidden basis-[950px] font-bold m-auto items-center justify-between sm:hidden md:hidden lg:flex ">
                 <div className="text-[25px]">Event Management</div>
                 <div className="basis-[300px] items-center justify-center flex">
-                    <Link to="/Home" className="mr-2">
+                    <Link to="/event" className="mr-4">
                         Event
                     </Link>
-                    <Link to="/Home" className="mr-2">
+                    <Link to="/event" className="mr-4">
                         Attendees
                     </Link>
-                    <Link to="/Home" className="mr-2">
+                    <Link to="/event" className="mr-4">
                         About
                     </Link>
                 </div>
