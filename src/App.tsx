@@ -15,7 +15,7 @@ const App: React.FC = () => {
             <div className="grid-container h-max bg-cover bg-center bg-no-repeat  w-full">
                 <BrowserRouter>
                     <Header />
-                    <main className="main flex">
+                    <main className="main flex min-h-[calc(100vh-130px)]">
                         <Routes>
                             <Route path="/event" element={<Event />} />
                         </Routes>

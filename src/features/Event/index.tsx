@@ -1,13 +1,6 @@
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useEventQuery } from "@/queries";
 import {
-    priceOptions,
-    themeOptions,
-    tierOptions,
-    timeOptions,
-} from "@/consts/common";
-import { useProductQuery } from "@/queries";
-import {
-    ColumnDef,
     ColumnFiltersState,
     flexRender,
     getCoreRowModel,
@@ -16,9 +9,8 @@ import {
     getSortedRowModel,
     SortingState,
     useReactTable,
-    VisibilityState,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { lazy, Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -31,162 +23,100 @@ import {
     TableRow,
 } from "@/components/ui/Table";
 import { Button } from "@/components/ui/Button";
-import { ArrowUpDown } from "lucide-react";
-import { FilterFormValues } from "./components/FilterForm";
 import { Input } from "@/components/ui/Input";
-
-const data: Payment[] = [
-    {
-        id: "m5gr84i9",
-        amount: 316,
-        status: "success",
-        email: "ken99@example.com",
-    },
-    {
-        id: "3u1reuv4",
-        amount: 242,
-        status: "success",
-        email: "Abe45@example.com",
-    },
-    {
-        id: "derv1ws0",
-        amount: 837,
-        status: "processing",
-        email: "Monserrat44@example.com",
-    },
-    {
-        id: "5kma53ae",
-        amount: 874,
-        status: "success",
-        email: "Silas22@example.com",
-    },
-    {
-        id: "bhqecj4p",
-        amount: 721,
-        status: "failed",
-        email: "carmella@example.com",
-    },
-];
-
-export type Payment = {
-    id: string;
-    amount: number;
-    status: "pending" | "processing" | "success" | "failed";
-    email: string;
-};
-
-export const columns: ColumnDef<Payment>[] = [
-    {
-        accessorKey: "status",
-        header: "Status",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("status")}</div>
-        ),
-    },
-    {
-        accessorKey: "email",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Email
-                    <ArrowUpDown />
-                </Button>
-            );
-        },
-        cell: ({ row }) => (
-            <div className="lowercase">{row.getValue("email")}</div>
-        ),
-    },
-    {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"));
-
-            // Format the amount as a dollar amount
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount);
-
-            return <div className="text-right font-medium">{formatted}</div>;
-        },
-    },
-    {
-        id: "actions",
-        enableHiding: false,
-        cell: ({ row }) => {
-            const payment = row.original;
-
-            return <div>Nothing</div>;
-        },
-    },
-];
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/Select";
+import { useDebounce } from "@uidotdev/usehooks";
+import { debounceSearchTermTime } from "@/consts/common";
+import { EventColumns } from "./components/EventColumns";
 
 const Event = () => {
-    const [showItems, setShowItems] = useState(20);
-    const [totalItems, setTotalItems] = useState(100);
-    const defaultValues = {
-        search: "",
-        tier: tierOptions[1].value,
-        theme: themeOptions[1].value,
-        price: priceOptions[0].value,
-        time: timeOptions[0].value,
-        priceRange: [10, 100],
-    };
+    // const [showItems, setShowItems] = useState(20);
+    // const [totalItems, setTotalItems] = useState(100);
+    // const defaultValues = {
+    //     search: "",
+    //     tier: tierOptions[1].value,
+    //     theme: themeOptions[1].value,
+    //     price: priceOptions[0].value,
+    //     time: timeOptions[0].value,
+    //     priceRange: [10, 100],
+    // };
 
-    const form = useForm<FilterFormValues>({
-        defaultValues,
-        mode: "onChange",
+    // const form = useForm<FilterFormValues>({
+    //     defaultValues,
+    //     mode: "onChange",
+    // });
+
+    // const { watch } = form;
+
+    // const increaseItems = () => {
+    //     setShowItems((pre) => pre + 20);
+    // };
+
+    // const onSubmit = () => {};
+
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+    const [rowSelection, setRowSelection] = useState({});
+
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 10,
     });
 
-    const { watch } = form;
+    const debouncedSearchTerm = useDebounce(searchTerm, debounceSearchTermTime);
 
-    const increaseItems = () => {
-        setShowItems((pre) => pre + 20);
-    };
-
-    const onSubmit = () => {};
-
-    const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] =
-        React.useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = React.useState({});
+    const { data } = useEventQuery(
+        pagination.pageIndex,
+        pagination.pageSize,
+        debouncedSearchTerm
+    );
 
     const table = useReactTable({
-        data,
-        columns,
+        data: data?.data.events || [],
+        columns: EventColumns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
+        onPaginationChange: setPagination,
+        manualPagination: true,
+        rowCount: data?.data.pagination.total,
+        pageCount: data?.data.pagination.totalPage,
         state: {
+            pagination,
             sorting,
             columnFilters,
-            columnVisibility,
             rowSelection,
         },
     });
 
+    const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+    };
+
     return (
-        <div className="m-auto basis-[950px] flex flex-col justify-center">
+        <div className="mx-auto basis-[950px] flex flex-col">
             <div className="w-full flex justify-end mt-5">
                 <Button>+ Event</Button>
             </div>
             <div className="flex w-full max-w-sm items-center space-x-2 mb-2">
-                <Input type="text" placeholder="Search by title..." />
-                <Button type="submit">Search</Button>
+                <Input
+                    type="text"
+                    placeholder="Search by title..."
+                    onChange={handleChangeSearch}
+                />
             </div>
             <div className="w-full rounded-md border">
                 <Table>
@@ -231,7 +161,7 @@ const Event = () => {
                         ) : (
                             <TableRow>
                                 <TableCell
-                                    colSpan={columns.length}
+                                    colSpan={EventColumns.length}
                                     className="h-24 text-center"
                                 >
                                     No results.
@@ -244,7 +174,6 @@ const Event = () => {
             <div className="flex items-center justify-end space-x-2 py-4">
                 <Button
                     variant="outline"
-                    size="sm"
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
@@ -252,12 +181,32 @@ const Event = () => {
                 </Button>
                 <Button
                     variant="outline"
-                    size="sm"
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
                     Next
                 </Button>
+
+                <Select
+                    onValueChange={(value) => {
+                        table.setPageSize(Number(value));
+                    }}
+                    value={table.getState().pagination.pageSize.toString()}
+                >
+                    <SelectTrigger className="max-w-[80px]">
+                        <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent className="">
+                        {[10, 20, 30, 40, 50].map((pageSize) => (
+                            <SelectItem
+                                key={pageSize}
+                                value={pageSize.toString()}
+                            >
+                                {pageSize}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </div>
 
             {/* <div className="flex flex-col md:flex-col lg:flex-row">
