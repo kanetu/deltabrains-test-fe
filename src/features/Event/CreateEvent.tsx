@@ -13,37 +13,67 @@ import { EEvent, eeventSchema } from "@/types/eevent";
 import { Button } from "@/components/ui/Button";
 import { DatePicker } from "@/components/ui/DatePicker";
 import { Textarea } from "@/components/ui/Textarea";
-import { useCreateEventMutation } from "@/queries/event";
-import { useNavigate } from "react-router-dom";
+import {
+    useCreateEventMutation,
+    useEventByIdQuery,
+    useUpdateEventMutation,
+} from "@/queries/event";
+import { useNavigate, useParams } from "react-router-dom";
 
 type CreateEventProps = {};
 
 const CreateEvent: React.FC<CreateEventProps> = (props: CreateEventProps) => {
     const navigate = useNavigate();
+    const params = useParams();
+    const isUpdate = !!params.id;
 
     const handleCancel = () => {
         navigate("/event");
     };
 
+    const createEventMutation = useCreateEventMutation();
+    const updateEventMutation = useUpdateEventMutation();
+
+    const { data } = useEventByIdQuery(params.id || "", false, false);
+
+    const defaultValues = {
+        title: "",
+        content: "",
+        venue: "",
+        date: new Date(),
+        maxPerson: 0,
+    };
+
     const form = useForm<EEvent>({
         resolver: zodResolver(eeventSchema),
-        defaultValues: {
-            title: "",
-            content: "",
-            venue: "",
-            maxPerson: 0,
+        defaultValues: defaultValues,
+        values: {
+            title: data?.data.title || "",
+            content: data?.data.content || "",
+            date: data?.data.date || new Date(),
+            venue: data?.data.venue || "",
+            maxPerson: data?.data.maxPerson || 0,
         },
     });
 
-    const eventMutation = useCreateEventMutation();
+    console.log("?>", defaultValues);
 
     const onSubmit = (values: EEvent) => {
-        eventMutation.mutate(values);
+        if (isUpdate) {
+            createEventMutation.mutate(values);
+        } else {
+            updateEventMutation.mutate({
+                newEvent: values,
+                id: params.id || "",
+            });
+        }
         navigate("/event");
     };
+
+    const title = isUpdate ? "Cập nhật sự kiện" : "Tạo mới sự kiện";
     return (
         <div className="mx-auto basis-[950px] flex flex-col">
-            <h1 className="font-bold text-xl mt-8">Tạo mới sự kiện</h1>
+            <h1 className="font-bold text-xl mt-8">{title}</h1>
             <div className="flex justify-center w-full border boder-2 py-4 my-2 mb-[20px] rounded-2xl">
                 <Form {...form}>
                     <form

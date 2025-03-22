@@ -23,6 +23,13 @@ const App: React.FC = () => {
                             <Route path="event">
                                 <Route index element={<Event />} />
                                 <Route path=":id" element={<ViewEvent />} />
+                                <Route path="update">
+                                    <Route
+                                        path=":id"
+                                        index
+                                        element={<CreateEvent />}
+                                    ></Route>
+                                </Route>
                                 <Route
                                     path="create"
                                     element={<CreateEvent />}

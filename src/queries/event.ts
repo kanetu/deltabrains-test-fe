@@ -1,6 +1,7 @@
 import axiosClient from "@/lib/axiosClient";
 import { EEvent } from "@/types/eevent";
 import {
+    DefinedInitialDataOptions,
     QueryFunctionContext,
     useMutation,
     useQuery,
@@ -14,6 +15,7 @@ import {
     updateEvent,
 } from "./endpoints";
 import { defaultStaleTime } from "@/consts/common";
+import { toast } from "sonner";
 
 type UseEventQueryResponse = {
     data: {
@@ -76,7 +78,14 @@ type UseEventByIdQueryResponse = {
     success: boolean;
 };
 
-export const useEventByIdQuery = (id: string) => {
+export const useEventByIdQuery = (
+    id: string,
+    refetchOnWindowFocus: boolean = true,
+    enabled: boolean = true
+) => {
+    //     refetchOnWindowFocus: false,
+    //   enabled: false // disable this query from automatically running
+
     const queryKey = getEventById.getQueryKeys(id);
 
     const queryFn = async ({ queryKey }: QueryFunctionContext) => {
@@ -92,6 +101,8 @@ export const useEventByIdQuery = (id: string) => {
         queryKey,
         queryFn,
         staleTime: defaultStaleTime,
+        refetchOnWindowFocus,
+        enabled,
     });
 };
 
@@ -104,6 +115,10 @@ export const useCreateEventMutation = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["events"] });
+            toast("Tạo sự kiện thành công");
+        },
+        onError: () => {
+            toast("Tạo sự kiện thất bại");
         },
     });
 };
@@ -117,6 +132,10 @@ export const useDeleteEventMutation = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["events"] });
+            toast("Xóa sự kiện thành công");
+        },
+        onError: () => {
+            toast("Xóa sự kiện thất bại");
         },
     });
 };
@@ -133,6 +152,10 @@ export const useUpdateEventMutation = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["events"] });
+            toast("Cập nhật sự kiện thành công");
+        },
+        onError: () => {
+            toast("Cập nhật sự kiện thất bại");
         },
     });
 };

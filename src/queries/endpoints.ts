@@ -24,3 +24,7 @@ export const getEventById = {
     getEndpoint: (id: string) => `/events/${id}`,
     getQueryKeys: (id: string) => ["event", id],
 };
+
+export const registerEvent = {
+    getEndpoint: (id: string) => `/register/${id}`,
+};
