@@ -102,7 +102,9 @@ const ViewEvent: React.FC<ViewEventProps> = (props: ViewEventProps) => {
                     </div>
                     <div className="flex flex-col">
                         <Label>Số người tham gia hiện tại:</Label>
-                        <span className="text-sm">{data?.data.maxPerson}</span>
+                        <span className="text-sm">
+                            {data?.data.attendeeCount}/{data?.data.maxPerson}
+                        </span>
                     </div>
 
                     <div className="flex justify-end space-x-4">
