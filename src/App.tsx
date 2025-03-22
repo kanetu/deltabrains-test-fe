@@ -6,6 +6,10 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./styles/App.css";
 import "./styles/globals.css";
 import { Toaster } from "./components/ui/Toaster";
+import {
+    SkeletonEventDetail,
+    SkeletonListEvent,
+} from "@/components/ui/Skeleton";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +32,9 @@ const App: React.FC = () => {
                             <Route
                                 path="event"
                                 element={
-                                    <Suspense fallback="loading">
+                                    <Suspense
+                                        fallback={<SkeletonEventDetail />}
+                                    >
                                         <Event />
                                     </Suspense>
                                 }
@@ -36,7 +42,9 @@ const App: React.FC = () => {
                                 <Route
                                     index
                                     element={
-                                        <Suspense fallback="loading">
+                                        <Suspense
+                                            fallback={<SkeletonListEvent />}
+                                        >
                                             <ListEvent />
                                         </Suspense>
                                     }
@@ -45,7 +53,11 @@ const App: React.FC = () => {
                                     <Route
                                         index
                                         element={
-                                            <Suspense fallback="loading">
+                                            <Suspense
+                                                fallback={
+                                                    <SkeletonEventDetail />
+                                                }
+                                            >
                                                 <ViewEvent />
                                             </Suspense>
                                         }
@@ -53,7 +65,11 @@ const App: React.FC = () => {
                                     <Route
                                         path="edit"
                                         element={
-                                            <Suspense fallback="loading">
+                                            <Suspense
+                                                fallback={
+                                                    <SkeletonEventDetail />
+                                                }
+                                            >
                                                 <EventForm />
                                             </Suspense>
                                         }

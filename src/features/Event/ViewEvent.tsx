@@ -2,6 +2,10 @@ import { useEventByIdQuery } from "@/queries/event";
 import { useParams } from "react-router-dom";
 
 import { lazy, Suspense, useState } from "react";
+import {
+    SkeletonEventDetail,
+    SkeletonEventRegister,
+} from "@/components/ui/Skeleton";
 
 type ViewEventProps = {};
 
@@ -16,7 +20,7 @@ const ViewEvent: React.FC<ViewEventProps> = (props: ViewEventProps) => {
 
     return (
         <div>
-            <Suspense fallback="loading">
+            <Suspense fallback={<SkeletonEventDetail />}>
                 <EventDetail
                     eventId={params.id}
                     data={data?.data}
@@ -24,7 +28,7 @@ const ViewEvent: React.FC<ViewEventProps> = (props: ViewEventProps) => {
                 />
             </Suspense>
             {isRegister && (
-                <Suspense fallback="loading">
+                <Suspense fallback={<SkeletonEventRegister />}>
                     <EventRegister eventId={params.id} />
                 </Suspense>
             )}
