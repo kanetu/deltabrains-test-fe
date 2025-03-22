@@ -30,6 +30,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/AlertDialog";
+import { toast } from "sonner";
 
 type ViewEventProps = {};
 
@@ -63,6 +64,7 @@ const ViewEvent: React.FC<ViewEventProps> = (props: ViewEventProps) => {
 
     const handleDeleteEvent = () => {
         deleteEventMutation.mutate(params.id || "");
+        toast("Xóa sự kiện thành công");
         navigate("/event");
     };
     return (

@@ -8,6 +8,7 @@ import "./styles/App.css";
 import "./styles/globals.css";
 import CreateEvent from "./features/Event/CreateEvent";
 import ViewEvent from "./features/Event/ViewEvent";
+import { Toaster } from "./components/ui/Toaster";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App: React.FC = () => {
                             </Route>
                         </Routes>
                     </main>
+                    <Toaster />
                     <Footer />
                 </BrowserRouter>
             </div>
