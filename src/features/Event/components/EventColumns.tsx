@@ -1,3 +1,4 @@
+import { defaultFormatDate } from "@/consts/common";
 import { EEvent } from "@/types/eevent";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -12,7 +13,7 @@ export const EventColumns: ColumnDef<EEvent & { id: string }>[] = [
             const original = row.original;
             return (
                 <div className="capitalize font-medium hover:underline">
-                    <Link to={`/events/${original.id}`}>
+                    <Link to={`/event/${original.id}`}>
                         {row.getValue("title")}
                     </Link>
                 </div>
@@ -24,7 +25,7 @@ export const EventColumns: ColumnDef<EEvent & { id: string }>[] = [
         header: "Date",
         cell: ({ row }) => (
             <div>
-                {format(new Date(row.getValue("date")), "EEEE dd-MM-yyyy", {
+                {format(new Date(row.getValue("date")), defaultFormatDate, {
                     locale: vi,
                 })}
             </div>

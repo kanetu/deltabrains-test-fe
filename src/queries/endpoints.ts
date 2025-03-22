@@ -11,3 +11,16 @@ export const getAllEvent = {
 export const createEvent = {
     getEndpoint: () => `/events`,
 };
+
+export const deleteEvent = {
+    getEndpoint: (id: string) => `/events/${id}`,
+};
+
+export const updateEvent = {
+    getEndpoint: (id: string) => `/events/${id}`,
+};
+
+export const getEventById = {
+    getEndpoint: (id: string) => `/events/${id}`,
+    getQueryKeys: (id: string) => ["event", id],
+};

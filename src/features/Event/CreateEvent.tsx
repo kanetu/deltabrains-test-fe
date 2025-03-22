@@ -13,7 +13,7 @@ import { EEvent, eeventSchema } from "@/types/eevent";
 import { Button } from "@/components/ui/Button";
 import { DatePicker } from "@/components/ui/DatePicker";
 import { Textarea } from "@/components/ui/Textarea";
-import { useEventMutation } from "@/queries/event";
+import { useCreateEventMutation } from "@/queries/event";
 import { useNavigate } from "react-router-dom";
 
 type CreateEventProps = {};
@@ -35,7 +35,7 @@ const CreateEvent: React.FC<CreateEventProps> = (props: CreateEventProps) => {
         },
     });
 
-    const eventMutation = useEventMutation();
+    const eventMutation = useCreateEventMutation();
 
     const onSubmit = (values: EEvent) => {
         eventMutation.mutate(values);

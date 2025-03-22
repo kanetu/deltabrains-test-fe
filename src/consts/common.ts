@@ -1,3 +1,7 @@
 const debounceSearchTermTime = 200;
 
-export { debounceSearchTermTime };
+const defaultFormatDate = "EEEE dd-MM-yyyy";
+
+const defaultStaleTime = 10000;
+
+export { debounceSearchTermTime, defaultFormatDate, defaultStaleTime };

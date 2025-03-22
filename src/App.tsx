@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./styles/App.css";
 import "./styles/globals.css";
 import CreateEvent from "./features/Event/CreateEvent";
+import ViewEvent from "./features/Event/ViewEvent";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App: React.FC = () => {
                         <Routes>
                             <Route path="event">
                                 <Route index element={<Event />} />
+                                <Route path=":id" element={<ViewEvent />} />
                                 <Route
                                     path="create"
                                     element={<CreateEvent />}

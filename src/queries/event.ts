@@ -6,9 +6,16 @@ import {
     useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
-import { createEvent, getAllEvent } from "./endpoints";
+import {
+    createEvent,
+    deleteEvent,
+    getAllEvent,
+    getEventById,
+    updateEvent,
+} from "./endpoints";
+import { defaultStaleTime } from "@/consts/common";
 
-type Response = {
+type UseEventQueryResponse = {
     data: {
         events: (EEvent & { attendeeCount: number })[];
         pagination: {
@@ -56,19 +63,73 @@ export const useEventQuery = (
 
         return data;
     };
-    return useQuery<Response>({
+    return useQuery<UseEventQueryResponse>({
         queryKey,
         queryFn,
-        staleTime,
+        staleTime: defaultStaleTime,
     });
 };
 
-export const useEventMutation = () => {
+type UseEventByIdQueryResponse = {
+    data: EEvent & { attendeeCount: number };
+    message: string;
+    success: boolean;
+};
+
+export const useEventByIdQuery = (id: string) => {
+    const queryKey = getEventById.getQueryKeys(id);
+
+    const queryFn = async ({ queryKey }: QueryFunctionContext) => {
+        const [_, id] = queryKey;
+
+        const { data } = await axiosClient.get(
+            getEventById.getEndpoint(id as string)
+        );
+
+        return data;
+    };
+    return useQuery<UseEventByIdQueryResponse>({
+        queryKey,
+        queryFn,
+        staleTime: defaultStaleTime,
+    });
+};
+
+export const useCreateEventMutation = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: (newEvent: EEvent) => {
             return axiosClient.post(createEvent.getEndpoint(), newEvent);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["events"] });
+        },
+    });
+};
+
+export const useDeleteEventMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: string) => {
+            return axiosClient.delete(deleteEvent.getEndpoint(id));
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["events"] });
+        },
+    });
+};
+
+export const useUpdateEventMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: { id: string; newEvent: Partial<EEvent> }) => {
+            return axiosClient.put(
+                updateEvent.getEndpoint(data.id),
+                data.newEvent
+            );
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["events"] });
