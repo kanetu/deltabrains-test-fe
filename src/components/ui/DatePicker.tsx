@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
 import { Button } from "./Button";
 import { Calendar } from "./Calendar";
-
+import { vi } from "date-fns/locale";
 export type DatePickerProps = {
     date: Date;
     setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
@@ -28,7 +28,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     )}
                 >
                     <CalendarIcon />
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    {date ? (
+                        format(date, "PPP", { locale: vi })
+                    ) : (
+                        <span>Chọn ngày</span>
+                    )}
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">

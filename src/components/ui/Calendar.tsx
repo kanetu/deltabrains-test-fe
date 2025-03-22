@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import * as React from "react";
 import { DayFlag, DayPicker, SelectionState, UI } from "react-day-picker";
-
+import { vi } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "./Button";
 
@@ -22,6 +22,7 @@ export const Calendar = ({
 }: CalendarProps) => {
     return (
         <DayPicker
+            locale={vi}
             showOutsideDays={showOutsideDays}
             className={cn("p-3", className)}
             classNames={{
