@@ -1,5 +1,12 @@
+import axiosClient from "@/lib/axiosClient";
 import { EEvent } from "@/types/eevent";
-import { QueryFunctionContext, useQuery } from "@tanstack/react-query";
+import {
+    QueryFunctionContext,
+    useMutation,
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query";
+import { createEvent, getAllEvent } from "./endpoints";
 
 type Response = {
     data: {
@@ -20,7 +27,8 @@ export const useEventQuery = (
     searchTerm: string
 ) => {
     const staleTime = 60000; // 60s
-    const queryKey = ["events", page, limit, searchTerm];
+
+    const queryKey = getAllEvent.getQueryKeys(page, limit, searchTerm);
 
     const buildFilterParams = (
         page: number,
@@ -42,20 +50,28 @@ export const useEventQuery = (
             searchTerm as string
         ).toString();
 
-        // Add timeout to increase UX
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const { data } = await axiosClient.get(
+            getAllEvent.getEndpoint(queryParams)
+        );
 
-        let url = `http://localhost:3001/v1/events?${queryParams}`;
-        const response = await fetch(url, {
-            method: "GET",
-        });
-        const res = await response;
-
-        return res.json();
+        return data;
     };
     return useQuery<Response>({
         queryKey,
         queryFn,
         staleTime,
+    });
+};
+
+export const useEventMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (newEvent: EEvent) => {
+            return axiosClient.post(createEvent.getEndpoint(), newEvent);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["events"] });
+        },
     });
 };

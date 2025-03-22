@@ -27,13 +27,19 @@ import {
 } from "@tanstack/react-table";
 import { ChangeEvent, useState } from "react";
 import { EventColumns } from "./EventColumns";
-import { useEventQuery } from "@/queries";
+import { useEventQuery } from "@/queries/event";
 import { useDebounce } from "@uidotdev/usehooks";
 import { debounceSearchTermTime } from "@/consts/common";
+import { useNavigate } from "react-router-dom";
 
 type ListEventProps = {};
 
 const ListEvent: React.FC<ListEventProps> = (props: ListEventProps) => {
+    const navigate = useNavigate();
+
+    const handleCreateEvent = () => {
+        navigate("/event/create");
+    };
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -82,7 +88,7 @@ const ListEvent: React.FC<ListEventProps> = (props: ListEventProps) => {
     return (
         <div>
             <div className="w-full flex justify-end mt-5">
-                <Button>+ Event</Button>
+                <Button onClick={handleCreateEvent}>+ Event</Button>
             </div>
             <div className="flex w-full max-w-sm items-center space-x-2 mb-2">
                 <Input
@@ -170,7 +176,7 @@ const ListEvent: React.FC<ListEventProps> = (props: ListEventProps) => {
                         <SelectValue placeholder="Theme" />
                     </SelectTrigger>
                     <SelectContent className="">
-                        {[10, 20, 30, 40, 50].map((pageSize) => (
+                        {[10, 30, 50].map((pageSize) => (
                             <SelectItem
                                 key={pageSize}
                                 value={pageSize.toString()}

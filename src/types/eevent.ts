@@ -7,7 +7,7 @@ export const eeventSchema = z.object({
     date: z.coerce.date().refine((value) => new Date(value) >= new Date(), {
         message: "The date must be after today",
     }),
-    maxPerson: z.number().int().min(1).max(100),
+    maxPerson: z.coerce.number().int().min(1).max(100),
 });
 
 type EEvent = z.infer<typeof eeventSchema>;

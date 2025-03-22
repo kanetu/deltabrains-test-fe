@@ -6,6 +6,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./styles/App.css";
 import "./styles/globals.css";
+import CreateEvent from "./features/Event/CreateEvent";
 
 const queryClient = new QueryClient();
 
@@ -17,7 +18,13 @@ const App: React.FC = () => {
                     <Header />
                     <main className="main flex min-h-[calc(100vh-130px)]">
                         <Routes>
-                            <Route path="/event" element={<Event />} />
+                            <Route path="event">
+                                <Route index element={<Event />} />
+                                <Route
+                                    path="create"
+                                    element={<CreateEvent />}
+                                />
+                            </Route>
                         </Routes>
                     </main>
                     <Footer />
