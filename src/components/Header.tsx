@@ -14,13 +14,13 @@ const Header: React.FC<HeaderProps> = () => {
                 <div className="text-[25px]">Event Management</div>
                 <div className="basis-[300px] items-center justify-center flex">
                     <Link to="/event" className="mr-4">
-                        Event
+                        Sự kiện
                     </Link>
                     <Link to="/event" className="mr-4">
-                        Attendees
+                        Người tham gia
                     </Link>
                     <Link to="/event" className="mr-4">
-                        About
+                        Về chúng tôi
                     </Link>
                 </div>
             </div>
