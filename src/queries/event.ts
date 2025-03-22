@@ -16,6 +16,7 @@ import {
 } from "./endpoints";
 import { defaultStaleTime } from "@/consts/common";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 type UseEventQueryResponse = {
     data: {
@@ -83,9 +84,6 @@ export const useEventByIdQuery = (
     refetchOnWindowFocus: boolean = true,
     enabled: boolean = true
 ) => {
-    //     refetchOnWindowFocus: false,
-    //   enabled: false // disable this query from automatically running
-
     const queryKey = getEventById.getQueryKeys(id);
 
     const queryFn = async ({ queryKey }: QueryFunctionContext) => {
@@ -154,8 +152,11 @@ export const useUpdateEventMutation = () => {
             queryClient.invalidateQueries({ queryKey: ["events"] });
             toast("Cập nhật sự kiện thành công");
         },
-        onError: () => {
-            toast("Cập nhật sự kiện thất bại");
+        onError: (error: AxiosError) => {
+            toast("Cập nhật sự kiện thất bại", {
+                description: (error?.response?.data as { message: string })
+                    .message,
+            });
         },
     });
 };

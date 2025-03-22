@@ -1,17 +1,18 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import Event from "@/features/Event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./styles/App.css";
 import "./styles/globals.css";
-import CreateEvent from "./features/Event/CreateEvent";
-import ViewEvent from "./features/Event/ViewEvent";
 import { Toaster } from "./components/ui/Toaster";
 
 const queryClient = new QueryClient();
 
+const Event = lazy(() => import("@/features/Event"));
+const ListEvent = lazy(() => import("@/features/Event/ListEvent"));
+const ViewEvent = lazy(() => import("@/features/Event/ViewEvent"));
+const EventForm = lazy(() => import("@/features/Event/EventForm"));
 const App: React.FC = () => {
     return (
         <QueryClientProvider client={queryClient}>
@@ -20,19 +21,47 @@ const App: React.FC = () => {
                     <Header />
                     <main className="main flex min-h-[calc(100vh-130px)]">
                         <Routes>
-                            <Route path="event">
-                                <Route index element={<Event />} />
-                                <Route path=":id" element={<ViewEvent />} />
-                                <Route path="update">
+                            <Route
+                                path="event"
+                                element={
+                                    <Suspense fallback="loading">
+                                        <Event />
+                                    </Suspense>
+                                }
+                            >
+                                <Route
+                                    index
+                                    element={
+                                        <Suspense fallback="loading">
+                                            <ListEvent />
+                                        </Suspense>
+                                    }
+                                />
+                                <Route path=":id">
                                     <Route
-                                        path=":id"
                                         index
-                                        element={<CreateEvent />}
-                                    ></Route>
+                                        element={
+                                            <Suspense fallback="loading">
+                                                <ViewEvent />
+                                            </Suspense>
+                                        }
+                                    />
+                                    <Route
+                                        path="edit"
+                                        element={
+                                            <Suspense fallback="loading">
+                                                <EventForm />
+                                            </Suspense>
+                                        }
+                                    />
                                 </Route>
                                 <Route
-                                    path="create"
-                                    element={<CreateEvent />}
+                                    path="add"
+                                    element={
+                                        <Suspense fallback="loading">
+                                            <EventForm />
+                                        </Suspense>
+                                    }
                                 />
                             </Route>
                         </Routes>

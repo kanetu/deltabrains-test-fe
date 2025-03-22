@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/Input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EEvent, eeventSchema } from "@/types/eevent";
+import { EEvent, eeventSchema, getEditEventSchema } from "@/types/eevent";
 import { Button } from "@/components/ui/Button";
 import { DatePicker } from "@/components/ui/DatePicker";
 import { Textarea } from "@/components/ui/Textarea";
@@ -19,13 +19,14 @@ import {
     useUpdateEventMutation,
 } from "@/queries/event";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
-type CreateEventProps = {};
+type EventFormProps = {};
 
-const CreateEvent: React.FC<CreateEventProps> = (props: CreateEventProps) => {
+const EventForm: React.FC<EventFormProps> = (props: EventFormProps) => {
     const navigate = useNavigate();
     const params = useParams();
-    const isUpdate = !!params.id;
+    const isEdit = !!params.id;
 
     const handleCancel = () => {
         navigate("/event");
@@ -34,45 +35,54 @@ const CreateEvent: React.FC<CreateEventProps> = (props: CreateEventProps) => {
     const createEventMutation = useCreateEventMutation();
     const updateEventMutation = useUpdateEventMutation();
 
-    const { data } = useEventByIdQuery(params.id || "", false, false);
-
-    const defaultValues = {
-        title: "",
-        content: "",
-        venue: "",
-        date: new Date(),
-        maxPerson: 0,
-    };
+    const { data, refetch } = useEventByIdQuery(params.id || "", false, false);
 
     const form = useForm<EEvent>({
-        resolver: zodResolver(eeventSchema),
-        defaultValues: defaultValues,
-        values: {
-            title: data?.data.title || "",
-            content: data?.data.content || "",
-            date: data?.data.date || new Date(),
-            venue: data?.data.venue || "",
-            maxPerson: data?.data.maxPerson || 0,
+        resolver: zodResolver(
+            isEdit
+                ? getEditEventSchema(data?.data.attendeeCount || 0)
+                : eeventSchema
+        ),
+        defaultValues: {
+            title: "",
+            content: "",
+            venue: "",
+            maxPerson: 0,
         },
+        values: data
+            ? {
+                  title: data.data.title || "",
+                  content: data.data.content || "",
+                  date: data.data.date || new Date(),
+                  venue: data.data.venue || "",
+                  maxPerson: data.data.maxPerson || 0,
+              }
+            : undefined,
     });
 
-    console.log("?>", defaultValues);
+    useEffect(() => {
+        if (isEdit) {
+            refetch();
+        }
+    }, [isEdit, refetch]);
+
+    console.log("?>");
 
     const onSubmit = (values: EEvent) => {
-        if (isUpdate) {
-            createEventMutation.mutate(values);
-        } else {
+        if (isEdit) {
             updateEventMutation.mutate({
                 newEvent: values,
                 id: params.id || "",
             });
+        } else {
+            createEventMutation.mutate(values);
         }
         navigate("/event");
     };
 
-    const title = isUpdate ? "Cập nhật sự kiện" : "Tạo mới sự kiện";
+    const title = isEdit ? "Cập nhật sự kiện" : "Tạo mới sự kiện";
     return (
-        <div className="mx-auto basis-[950px] flex flex-col">
+        <div>
             <h1 className="font-bold text-xl mt-8">{title}</h1>
             <div className="flex justify-center w-full border boder-2 py-4 my-2 mb-[20px] rounded-2xl">
                 <Form {...form}>
@@ -182,4 +192,4 @@ const CreateEvent: React.FC<CreateEventProps> = (props: CreateEventProps) => {
     );
 };
 
-export default CreateEvent;
+export default EventForm;

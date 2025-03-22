@@ -28,4 +28,14 @@ export const eeventSchema = z.object({
 
 type EEvent = z.infer<typeof eeventSchema>;
 
+export const getEditEventSchema = (attendeeCount: number) =>
+    eeventSchema.extend({
+        maxPerson: eeventSchema.shape.maxPerson.refine(
+            (val) => val >= attendeeCount,
+            {
+                message: `Số lượng tối đa không thể nhỏ hơn số người đã đăng ký (${attendeeCount})`,
+            }
+        ),
+    });
+
 export type { EEvent };

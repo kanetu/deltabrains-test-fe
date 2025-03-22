@@ -16,17 +16,13 @@ import {
     SelectValue,
 } from "@/components/ui/Select";
 import {
-    ColumnFiltersState,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
     getPaginationRowModel,
-    getSortedRowModel,
-    SortingState,
     useReactTable,
 } from "@tanstack/react-table";
 import { ChangeEvent, useState } from "react";
-import { EventColumns } from "./EventColumns";
+import { EventColumns } from "./components/EventColumns";
 import { useEventQuery } from "@/queries/event";
 import { useDebounce } from "@uidotdev/usehooks";
 import { debounceSearchTermTime } from "@/consts/common";
@@ -38,13 +34,8 @@ const ListEvent: React.FC<ListEventProps> = (props: ListEventProps) => {
     const navigate = useNavigate();
 
     const handleCreateEvent = () => {
-        navigate("/event/create");
+        navigate("/event/add");
     };
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-    const [rowSelection, setRowSelection] = useState({});
-
     const [searchTerm, setSearchTerm] = useState("");
 
     const [pagination, setPagination] = useState({
@@ -63,22 +54,14 @@ const ListEvent: React.FC<ListEventProps> = (props: ListEventProps) => {
     const table = useReactTable({
         data: data?.data.events || [],
         columns: EventColumns,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onRowSelectionChange: setRowSelection,
         onPaginationChange: setPagination,
         manualPagination: true,
         rowCount: data?.data.pagination.total,
         pageCount: data?.data.pagination.totalPage,
         state: {
             pagination,
-            sorting,
-            columnFilters,
-            rowSelection,
         },
     });
 

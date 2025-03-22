@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/Card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { format } from "date-fns";
 import { defaultFormatDate } from "@/consts/common";
 import { vi } from "date-fns/locale";
@@ -41,10 +41,14 @@ const EventDetail: React.FC<EventDetailProps> = ({
     const handleClickRegister = () => {
         setIsRegister((prev) => !prev);
     };
+
+    const handleClickEdit = () => {
+        navigate(`/event/${eventId}/edit`);
+    };
     return (
         <div className="">
-            <h1 className="font-bold text-xl mt-8">Thông tin sự kiện</h1>
-            <Card className="py-4 px-8 flex space-y-4 flex-col">
+            <Card className="py-4 px-8 flex space-y-4 flex-col mt-8">
+                <h1 className="font-bold text-xl ">Thông tin sự kiện</h1>
                 <div className="flex flex-col">
                     <Label>Tiêu đề:</Label>
                     <span className="text-sm font-bold">{data?.title}</span>
@@ -76,7 +80,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
 
                 <div className="flex justify-end space-x-4">
                     <Button onClick={handleClickRegister}>Đăng ký</Button>
-                    <Button>Chỉnh sửa</Button>
+                    <Button onClick={handleClickEdit}>Chỉnh sửa</Button>
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button

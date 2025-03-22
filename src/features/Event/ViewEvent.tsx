@@ -15,7 +15,7 @@ const ViewEvent: React.FC<ViewEventProps> = (props: ViewEventProps) => {
     const { data } = useEventByIdQuery(params.id || "");
 
     return (
-        <div className="mx-auto basis-[950px] flex flex-col">
+        <div>
             <Suspense fallback="loading">
                 <EventDetail
                     eventId={params.id}

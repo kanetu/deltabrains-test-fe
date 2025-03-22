@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 export const EventColumns: ColumnDef<EEvent & { id: string }>[] = [
     {
         accessorKey: "title",
-        header: "Title",
+        header: "Tiêu đề",
         cell: ({ row }) => {
             const original = row.original;
             return (
@@ -22,7 +22,7 @@ export const EventColumns: ColumnDef<EEvent & { id: string }>[] = [
     },
     {
         accessorKey: "date",
-        header: "Date",
+        header: "Ngày tổ chức",
         cell: ({ row }) => (
             <div>
                 {format(new Date(row.getValue("date")), defaultFormatDate, {
@@ -33,16 +33,18 @@ export const EventColumns: ColumnDef<EEvent & { id: string }>[] = [
     },
     {
         accessorKey: "venue",
-        header: "Venue",
+        header: "Địa điểm",
         cell: ({ row }) => (
             <div className="capitalize">{row.getValue("venue")}</div>
         ),
     },
     {
         accessorKey: "attendeeCount",
-        header: "Attendee",
+        header: "Số người tham gia hiện tại",
         cell: ({ row }) => (
-            <div className="lowercase">{row.getValue("attendeeCount")}</div>
+            <div className="lowercase">
+                {row.getValue("attendeeCount")}/{row.original.maxPerson}
+            </div>
         ),
     },
 ];

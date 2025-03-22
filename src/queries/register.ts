@@ -20,7 +20,6 @@ export const useRegisterEventMutation = () => {
                 queryClient.invalidateQueries({ queryKey: ["events"] });
         },
         onError: (error: AxiosError) => {
-            console.log(error);
             toast(`Đăng ký tham gia sự kiện thất bại`, {
                 description: (error?.response?.data as { message: string })
                     .message,
