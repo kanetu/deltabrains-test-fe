@@ -26,5 +26,5 @@ export const getEventById = {
 };
 
 export const registerEvent = {
-    getEndpoint: (id: string) => `/register/${id}`,
+    getEndpoint: (id: string) => `/events/${id}/register`,
 };

@@ -13,8 +13,8 @@ import { Attendee, attendeeSchema } from "@/types/attendee";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
-import { useRegisterEventMutation } from "@/queries/register";
 import { useNavigate } from "react-router-dom";
+import { useRegisterEventMutation } from "@/queries/event";
 
 type EventRegisterProps = {
     eventId?: string;

@@ -1,7 +1,6 @@
 import axiosClient from "@/lib/axiosClient";
 import { EEvent } from "@/types/eevent";
 import {
-    DefinedInitialDataOptions,
     QueryFunctionContext,
     useMutation,
     useQuery,
@@ -12,11 +11,13 @@ import {
     deleteEvent,
     getAllEvent,
     getEventById,
+    registerEvent,
     updateEvent,
 } from "./endpoints";
 import { defaultStaleTime } from "@/consts/common";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { Attendee } from "@/types/attendee";
 
 type UseEventQueryResponse = {
     data: {
@@ -148,12 +149,39 @@ export const useUpdateEventMutation = () => {
                 data.newEvent
             );
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["events"] });
+            queryClient.invalidateQueries({
+                queryKey: getEventById.getQueryKeys(data.data.data.id),
+            });
+
             toast("Cập nhật sự kiện thành công");
         },
         onError: (error: AxiosError) => {
             toast("Cập nhật sự kiện thất bại", {
+                description: (error?.response?.data as { message: string })
+                    .message,
+            });
+        },
+    });
+};
+
+export const useRegisterEventMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: { eventId: string; attendee: Attendee }) => {
+            return axiosClient.post(
+                registerEvent.getEndpoint(data.eventId),
+                data.attendee
+            );
+        },
+        onSuccess: () => {
+            toast("Đăng ký tham gia sự kiện thành công"),
+                queryClient.invalidateQueries({ queryKey: ["events"] });
+        },
+        onError: (error: AxiosError) => {
+            toast(`Đăng ký tham gia sự kiện thất bại`, {
                 description: (error?.response?.data as { message: string })
                     .message,
             });

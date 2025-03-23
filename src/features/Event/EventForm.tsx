@@ -66,8 +66,6 @@ const EventForm: React.FC<EventFormProps> = (props: EventFormProps) => {
         }
     }, [isEdit, refetch]);
 
-    console.log("?>");
-
     const onSubmit = (values: EEvent) => {
         if (isEdit) {
             updateEventMutation.mutate({
