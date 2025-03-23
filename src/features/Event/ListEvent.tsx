@@ -71,12 +71,12 @@ const ListEvent: React.FC<ListEventProps> = (props: ListEventProps) => {
     return (
         <div>
             <div className="w-full flex justify-end mt-5">
-                <Button onClick={handleCreateEvent}>+ Event</Button>
+                <Button onClick={handleCreateEvent}>+ Sự kiện</Button>
             </div>
             <div className="flex w-full max-w-sm items-center space-x-2 mb-2">
                 <Input
                     type="text"
-                    placeholder="Search by title..."
+                    placeholder="Tìm kiếm theo tiêu đề..."
                     onChange={handleChangeSearch}
                 />
             </div>

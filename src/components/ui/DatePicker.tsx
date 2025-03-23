@@ -29,7 +29,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 >
                     <CalendarIcon />
                     {date ? (
-                        format(date, "PPP", { locale: vi })
+                        format(date, "yyyy-MM-dd", { locale: vi })
                     ) : (
                         <span>Chọn ngày</span>
                     )}
