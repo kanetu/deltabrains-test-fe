@@ -1,103 +1,90 @@
- 
-## Project Requirements Checklist
+# DeltaBrains Test Frontend
 
-## A/ Must Have  
+## Overview
 
-### I. Functional  
-- [x] **UI / UX**  
-  - [x] UI matched with reference Figma Design (or custom design with attached Design File)  
-  - [x] Responsive Design for Desktop / Tablet / Mobile  
+DeltaBrains Test Frontend is a React-based project configured with Webpack, TypeScript, and various modern libraries to support UI development, state management, and form validation.
 
-- [ ] **Capabilities**  
-  - [x] Fetch user data from API (localhost server / mock tool / public mock)  
-  - [x] User can search and filter results based on **1** criterion  
-  - [x] User can load more data (See more)  
-  - [ ] System handles:
-    - [x] Data is being loaded  
-    - [X] Empty / No data returned  
-    - [ ] Other common exceptions  
-  - [x] System auto-refreshes data every **60 seconds**  
+## Tech Stack
 
-### II. Non-functional  
-- [x] **UI / UX**  
-  - [x] Can apply any UI framework (optional)  
+### Framework & Core Libraries
 
-- [x] **Development**  
-  - [x] Uses TypeScript  
+- **React** (19.0.0) - UI library for building components
+- **React DOM** (19.0.0) - React rendering in the browser
+- **TypeScript** (5.1.6) - Type safety for JavaScript
 
-- [x] **Code Styling**  
-  - [x] Has Code Formatter  
-  - [x] Has Code Lint  
+### Build & Configuration
 
-- [x] **Code Structure**  
-  - [x] Well-organized code  
-  - [x] Components are separated  
+- **Webpack** (5.75.0) - Module bundler
+- **Webpack CLI** (5.0.1) - Webpack command-line tool
+- **Webpack Dev Server** (4.11.1) - Local development server
+- **Babel** - JavaScript compiler with TypeScript and React presets
 
-- [x] **Code Quality**  
-  - [x] Unit Test Coverage **> 40%**  
+### State Management
 
-- [x] **Deployment**  
-  - [x] No specific repository naming convention  
+- **@tanstack/react-query** (5.10.0) - Data fetching and caching
+- **React Hook Form** (7.54.2) - Form state management
 
----
+### UI & Styling
 
-## B/ Nice To Have  
+- **Tailwind CSS** (4.0.11) - Utility-first CSS framework
+- **Radix UI** - Accessible UI components
+- **Lucide React** (0.477.0) - Icon library
 
-### I. Functional  
-- [x] **UI / UX**  
-  - [x] Basic animations (Page Transition, Fade-in / Fade-out)  
+### Routing
 
-- [x] **Capabilities**  
-  - [x] Implements a new feature/capability **beyond the Must Have section**  
-  - [x] Search supports **multiple criteria**  
-  - [x] Auto-triggers search when criteria change  
+- **React Router DOM** (6.16.0) - Declarative routing for React
 
-### II. Non-functional  
-- [ ] **UI / UX**  
-  - [ ] Uses **Ant Design**  
-  - [x] OR styles the app with pure/vanilla CSS  
+### Form Handling & Validation
 
-- [ ] **Development**  
-  - [x] Has **custom hooks** (for React.js / Next.js)  
-  - [ ] Has **Higher-Order Functions**  
-  - [x] Has **Code Comments**  
-  - [x] Separates config into an **environment file**  
-  - [x] Applies **Lazy Load**  
-  - [x] Implements **Skeleton Load**  
+- **React Hook Form** (7.54.2) - Form state management
+- **Zod** (3.24.2) - Schema validation
+- **@hookform/resolvers** (4.1.3) - Integration between React Hook Form and Zod
 
-- [ ] **Code Quality**  
-  - [ ] Unit Test Coverage **> 80%**  
-  - [x] Has **Component Tests / Integration Tests / End-to-End Tests**  
+### Utilities
 
-- [x] **Performance**  
-  - [x] Uses **Debounce Pattern**  
+- **Axios** (1.8.4) - Promise-based HTTP client
+- **Date-fns** (4.1.0) - Date utility functions
+- **Clsx** (2.1.1) - Conditional className management
+- **Tailwind Merge** (3.0.2) - Merge Tailwind classes
+- **Sonner** (2.0.1) - Notifications and toast messages
 
-- [ ] **Deployment**  
-  - [x] Well-defined commit messages  
-  - [ ] Has a **working demo online**  
+### Applied Techniques
 
+- **Debounce**
+- **Skeleton**
+- **Lazy loading**
 
-## Prerequisite
+## Setup & Installation
 
-Need a BE service to work with
+### Prerequisites
 
-## How to install
+Ensure you have the following installed:
 
-Run following steps
+- Node.js (latest LTS recommended)
+- npm or yarn
 
-<details>
-<summary>Show steps</summary>
-  
-### Step 1: Install packages
+### Install Dependencies
 
-```bash
+```sh
 npm install
+# or
+yarn install
 ```
 
-### Step 2: Run application
+### Run Development Server
 
-```bash
+```sh
 npm run dev
 ```
 
-</details>
+### Build for Production
+
+```sh
+npm run build
+```
+
+### Run Tests
+
+```sh
+npm run test
+```
